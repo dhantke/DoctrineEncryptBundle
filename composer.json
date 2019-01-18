@@ -4,6 +4,7 @@
 	"keywords" : [
 		"doctrine",
 		"symfony",
+		"openssl",
 		"aes256",
 		"encrypt",
 		"decrypt"
@@ -13,8 +14,7 @@
 	"require" : {
 		"php" : ">=5.4",
 		"symfony/framework-bundle" : ">=2.5",
-		"doctrine/orm" : ">=2.5",
-		"ext-mcrypt" : "*"
+		"doctrine/orm" : ">=2.5"
 	},
 	"autoload" : {
 		"psr-0" : {

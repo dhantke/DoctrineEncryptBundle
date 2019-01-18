@@ -3,12 +3,14 @@
 namespace Bytescreen\DoctrineEncryptBundle\Encryptors;
 
 /**
- * Class for variable encryption
+ * Base class for openssl encryption
  * 
- * @author Marcel van Nuil <marcel@ambta.com>
+ * @author Bytescreen
  */
-class Rijndael128Encryptor implements EncryptorInterface {
+abstract class OpenSSLEncryptor implements EncryptorInterface {
 
+    protected $method = "";
+    
     /**
      * @var string
      */
@@ -24,10 +26,7 @@ class Rijndael128Encryptor implements EncryptorInterface {
      */
     public function __construct($key) {
         $this->secretKey = md5($key);
-        $this->initializationVector = mcrypt_create_iv(
-            mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB),
-            MCRYPT_RAND
-        );
+        $this->initializationVector = openssl_random_pseudo_bytes(openssl_cipher_iv_length($this->method));
     }
 
     /**
@@ -36,11 +35,11 @@ class Rijndael128Encryptor implements EncryptorInterface {
     public function encrypt($data) {
 
         if(is_string($data)) {
-            return trim(base64_encode(mcrypt_encrypt(
-                MCRYPT_RIJNDAEL_128,
-                $this->secretKey,
+            return trim(base64_encode(openssl_encrypt(
                 $data,
-                MCRYPT_MODE_ECB,
+                $this->method,
+                $this->secretKey,
+                OPENSSL_RAW_DATA,
                 $this->initializationVector
             ))). "<ENC>";
         }
@@ -58,11 +57,11 @@ class Rijndael128Encryptor implements EncryptorInterface {
 
             $data = str_replace("<ENC>", "", $data);
 
-            return trim(mcrypt_decrypt(
-                MCRYPT_RIJNDAEL_128,
+            return trim(openssl_decrypt(
+                $data,
+                $this->method,
                 $this->secretKey,
-                base64_decode($data),
-                MCRYPT_MODE_ECB,
+                OPENSSL_RAW_DATA,
                 $this->initializationVector
             ));
         }
