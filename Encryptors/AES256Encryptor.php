@@ -1,6 +1,6 @@
 <?php
 
-namespace Ambta\DoctrineEncryptBundle\Encryptors;
+namespace Bytescreen\DoctrineEncryptBundle\Encryptors;
 
 /**
  * Class for AES256 encryption
